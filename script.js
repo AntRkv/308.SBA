@@ -85,20 +85,70 @@ const LearnerSubmissions = [
   },
 ];
 
+function getPossiblePointsByAssigmentId(studentsGroup) {
+  let posPoints = 0;
+  let dueDate ;
+  for (const element of studentsGroup.assignments) {
+    if (element.id === 1) {
+      posPoints = element.points_possible;
+      dueDate = new Date(element.due_at);
+    } else if (element.id === 2) {
+      posPoints = element.points_possible;
+      dueDate = new Date(element.due_at);
+    } else if (element.id === 3) {
+      posPoints = element.points_possible;
+      dueDate = new Date(element.due_at);
+    }
+  }
+  return { posPoints, dueDate };
+}
+
+let studentsData = {
+  id:0,
+  avg:0
+};
+
+
+function getLearnerScore(studentsSubmission){
+  studentsSubmission.forEach(element => {
+    switch (LearnerSubmissions[element].id) {
+      case 1:
+        studentsData = {
+          id: LearnerSubmissions[element].id,
+          avg: 
+        }
+        break;
+      case 2:
+        break;
+      case 3:
+        break;
+
+      default:
+        break;
+    }
+  });
+}
+
+
+
 function getLearnerData(course, assigmGroup, submissions) {
   // here, we would process this data to achieve the desired result.
 
-let flagZeroPoss = false;
+  let flagZeroPoss = false;
 
-assigmGroup.assignments.forEach(assignment => {
-  if (assignment.points_possible === 0) {
-    flagZeroPoss = true;
+  assigmGroup.assignments.forEach((assignment) => {
+    if (assignment.points_possible === 0) {
+      flagZeroPoss = true;
+    }
+  });
+
+  if (
+    assigmGroup.course_id !== course.id ||
+    flagZeroPoss ||
+    course.course_id < 0
+  ) {
+    throw new Error("Course id not matched or possible points equls zero˝");
   }
-});
-
-if (assigmGroup.course_id !== course.id || flagZeroPoss || course.course_id < 0) {
-  throw new Error("Course id not matched or possible points equls zero˝");
-}
 
   return result;
 }
@@ -106,16 +156,6 @@ if (assigmGroup.course_id !== course.id || flagZeroPoss || course.course_id < 0)
 const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
 
 console.log(result);
-
-
-
-
-
-
-
-
-
-
 
 // const result = [
 //   {
