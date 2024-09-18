@@ -90,24 +90,6 @@ function checkCourseAndAssignments(course, assigmGroup) {
   }
 }
 
-function getPossiblePointsByAssigmentIdAndDueDate(studentsGroup) {
-  let posPoints = 0;
-  let dueDate;
-  for (const element of studentsGroup.assignments) {
-    if (element.id === 1) {
-      posPoints = element.points_possible;
-      dueDate = new Date(element.due_at);
-    } else if (element.id === 2) {
-      posPoints = element.points_possible;
-      dueDate = new Date(element.due_at);
-    } else if (element.id === 3) {
-      posPoints = element.points_possible;
-      dueDate = new Date(element.due_at);
-    }
-  }
-  return { posPoints, dueDate };
-}
-
 const studentsData = [];
 
 function getUniqIds(students) {
@@ -123,13 +105,21 @@ function getUniqIds(students) {
 }
 
 function getLearnerData(course, assigmGroup, submissions) {
-
-
-
+  try {
+    checkCourseAndAssignments(CourseInfo, AssignmentGroup);
+  } catch (error) {
+    console.error("Validation Error:", error.message);
+  }
+  const learners = getUniqIds(submissions);
 
   
-  return result;
+  
+  return learners;
 }
+
+
+const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
+console.log(result);
 
 // const result = [
 //   {
