@@ -1,10 +1,8 @@
-// The provided course information.
 const CourseInfo = {
   id: 451,
   name: "Introduction to JavaScript",
 };
 
-// The provided assignment group.
 const AssignmentGroup = {
   id: 12345,
   name: "Fundamentals of JavaScript",
@@ -32,16 +30,6 @@ const AssignmentGroup = {
   ],
 };
 
-// const AssignmentInfo = {
-//   id: number,
-//   name: string,
-//   // the due date for the assignment
-//   due_at: string,
-//   // the maximum points possible for the assignment
-//   points_possible: number,
-// };
-
-// The provided learner submission data.
 const LearnerSubmissions = [
   {
     learner_id: 125,
@@ -85,9 +73,26 @@ const LearnerSubmissions = [
   },
 ];
 
-function getPossiblePointsByAssigmentId(studentsGroup) {
+function checkCourseAndAssignments(course, assigmGroup) {
+  let flagZeroPoss = false;
+
+  assigmGroup.assignments.forEach((assignment) => {
+    if (assignment.points_possible === 0) {
+      flagZeroPoss = true;
+    }
+  });
+  if (
+    assigmGroup.course_id !== course.id ||
+    flagZeroPoss ||
+    course.course_id < 0
+  ) {
+    throw new Error("Course id not matched or possible points equls zero˝");
+  }
+}
+
+function getPossiblePointsByAssigmentIdAndDueDate(studentsGroup) {
   let posPoints = 0;
-  let dueDate ;
+  let dueDate;
   for (const element of studentsGroup.assignments) {
     if (element.id === 1) {
       posPoints = element.points_possible;
@@ -103,59 +108,28 @@ function getPossiblePointsByAssigmentId(studentsGroup) {
   return { posPoints, dueDate };
 }
 
-let studentsData = {
-  id:0,
-  avg:0
-};
+const studentsData = [];
 
+function getUniqIds(students) {
+  const uniqueObj = {};
 
-function getLearnerScore(studentsSubmission){
-  studentsSubmission.forEach(element => {
-    switch (LearnerSubmissions[element].id) {
-      case 1:
-        studentsData = {
-          id: LearnerSubmissions[element].id,
-          avg: 
-        }
-        break;
-      case 2:
-        break;
-      case 3:
-        break;
-
-      default:
-        break;
+  students.forEach((item) => {
+    if (!uniqueObj[item.learner_id]) {
+      uniqueObj[item.learner_id] = { id: item.learner_id };
+      studentsData.push(uniqueObj[item.learner_id]);
     }
   });
+  return studentsData;
 }
-
-
 
 function getLearnerData(course, assigmGroup, submissions) {
-  // here, we would process this data to achieve the desired result.
 
-  let flagZeroPoss = false;
 
-  assigmGroup.assignments.forEach((assignment) => {
-    if (assignment.points_possible === 0) {
-      flagZeroPoss = true;
-    }
-  });
 
-  if (
-    assigmGroup.course_id !== course.id ||
-    flagZeroPoss ||
-    course.course_id < 0
-  ) {
-    throw new Error("Course id not matched or possible points equls zero˝");
-  }
 
+  
   return result;
 }
-
-const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
-
-console.log(result);
 
 // const result = [
 //   {
