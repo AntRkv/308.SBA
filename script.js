@@ -112,14 +112,29 @@ function getLearnerData(course, assigmGroup, submissions) {
   }
   const learners = getUniqIds(submissions);
 
-  
-  
+  function findAssignmentById(assigmGroup, assignmentId) {
+    let foundAssigm = null;
+
+    for (let index = 0; index < assigmGroup.assignments.length; index++) {
+      if (assigmGroup.assignments[index].id === assignmentId) {
+        foundAssigm = assigmGroup.assignments[index];
+        break;
+      }
+    }
+    return foundAssigm;
+  }
+  function pointsCalc(points, submitDay, dueDay, poiintsPos) {
+    if (submitDay > dueDay) {
+      points = points * 0.9;
+    }
+    return points;
+  }
+
   return learners;
 }
 
-
 const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
-console.log(result);
+// console.log(result);
 
 // const result = [
 //   {
