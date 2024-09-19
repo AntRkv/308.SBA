@@ -106,11 +106,10 @@ function getUniqIds(students) {
 
 function getLearnerData(course, assigmGroup, submissions) {
   try {
-    checkCourseAndAssignments(CourseInfo, AssignmentGroup);
+    checkCourseAndAssignments(course, assigmGroup);
   } catch (error) {
     console.error("Validation Error:", error.message);
   }
-  const learners = getUniqIds(submissions);
 
   function findAssignmentById(assigmGroup, assignmentId) {
     let foundAssigm = null;
@@ -123,18 +122,55 @@ function getLearnerData(course, assigmGroup, submissions) {
     }
     return foundAssigm;
   }
-  function pointsCalc(points, submitDay, dueDay, poiintsPos) {
+  function pointsCalc(points, submitDay, dueDay, pointsPos) {
     if (submitDay > dueDay) {
-      points = points * 0.9;
+      points -= pointsPos * 0.1;
     }
     return points;
   }
+
+  const learners = getUniqIds(submissions);
+
+  learners.forEach((learner) => {
+    let totalPoints = 0;
+    let totalPointsPossible = 0;
+
+    submissions.forEach((submission) => {
+      if (submission.learner_id === learner.id) {
+        const assignment = findAssignmentById(
+          assigmGroup,
+          submission.assignment_id
+        );
+
+        if (assignment) {
+          const dueDate = new Date(assignment.due_at);
+          const submitDate = new Date(submission.submission.submitted_at);
+          let points = submission.submission.score;
+
+          points = pointsCalc(
+            points,
+            submitDate,
+            dueDate,
+            assignment.points_possible
+          );
+
+          learner[assignment.id] = +(
+            points / assignment.points_possible
+          ).toFixed(2);
+          totalPoints += points;
+          totalPointsPossible += assignment.points_possible;
+        }
+      }
+    });
+
+    learner.avg = +(totalPoints / totalPointsPossible).toFixed(2);
+  });
 
   return learners;
 }
 
 const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
-// console.log(result);
+console.log(result);
 
 // const result = [
 //   {
